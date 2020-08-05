@@ -5,16 +5,15 @@ class ServerlessPlugin {
     
   constructor(serverless, options) {
    this.serverless = serverless;
-   this.mimeTypes = this.serverless.service.custom.apigwBinary.types;
+
    this.options = options || {};
-   this.provider = this.serverless.getProvider(this.serverless.service.provider.name);
+   this.provider = this.serverless.getProvider(this.serverless.service.provider.name) || "not-specified";
    this.stage = this.options.stage || this.serverless.service.provider.stage;
 
     this.commands = {
-      welcome: {
+      lambdacheck: {
         lifecycleEvents: [
-          'hello',
-          'world',
+          'memory',
         ],
         options: {
           message: {},
@@ -23,33 +22,39 @@ class ServerlessPlugin {
     };
     
    this.hooks = {
-       'before:welcome:hello': this.beforeWelcome.bind(this),
-      'welcome:hello': this.welcomeUser.bind(this),
-      'welcome:world': this.displayHelloMessage.bind(this),
-      'after:welcome:world': this.afterHelloWorld.bind(this),
-       'before:deploy:deploy': this.afterDeploy.bind(this)
+       'lambdacheck:memory': function () { lambdacheck(serverless) },
+       'before:deploy:deploy': function () { beforeDeploy(serverless) }
    };
-   
-   afterDeploy() {
-    this.serverless.cli.log(this.stage);
+  }
+ 
+}
+
+ 
+  function beforeDeploy(serverless){
+    let f = serverless.service.provider.memorySize || 1024;
+    let p = serverless.service.functions;
+    for (var key in p) {
+      if (p.hasOwnProperty(key)) {
+          console.log(key + " -> " + p[key]['memorySize']);
+          let m = p[key]['memorySize'] || 0;
+          if( m > 128 || ( m==0 && f > 128))
+              throw `Memory allocation for lambda function ${key} exceed 128mb`;
+      }
+    }
+    serverless.cli.log('Checks completed!');
   }
   
-  beforeWelcome() {
-    this.serverless.cli.log('Hello from Serverless!');
+  function lambdacheck(serverless) {
+    let f = serverless.service.provider.memorySize || 1024;
+    let p = serverless.service.functions;
+    for (var key in p) {
+      if (p.hasOwnProperty(key)) {
+          console.log(key + " -> " + p[key]['memorySize']);
+          let m = p[key]['memorySize'] || 0;
+          if( m > 128 || ( m==0 && f > 128))
+              console.log(`Memory allocation for lambda function ${key} exceed 128mb`);
+      }
+    }
+    serverless.cli.log('Checks completed!');
   }
-
-  welcomeUser() {
-    this.serverless.cli.log('Your message:');
-  }
-
-  displayHelloMessage() {
-    this.serverless.cli.log("msg");
-  }
-
-  afterHelloWorld() {
-    this.serverless.cli.log('Please come again!');
-  }
-}
-}
-
 module.exports = ServerlessPlugin;
