@@ -1,6 +1,19 @@
 {
-  "name": "serverlessLambdaCheckerPlugin",
+  "name": "serverlesslambdacheckerplugin",
   "version": "1.0.0",
-  "main": "src/index.js",
-  "license": "MIT"
+  "description": "1. `yarn add https://github.com/vinays57/serverlessLambdaMemoryCheckerPlugin.git`",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vinays57/serverlessLambdaMemoryCheckerPlugin.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vinays57/serverlessLambdaMemoryCheckerPlugin/issues"
+  },
+  "homepage": "https://github.com/vinays57/serverlessLambdaMemoryCheckerPlugin#readme"
 }
