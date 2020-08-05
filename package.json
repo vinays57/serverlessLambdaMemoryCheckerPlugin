@@ -2,5 +2,8 @@
   "name": "serverlessLambdaCheckerPlugin",
   "version": "1.0.0",
   "main": "src/index.js",
+   "engines": {
+    "node": ">=4.0"
+  },
   "license": "MIT"
 }
