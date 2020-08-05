@@ -7,6 +7,6 @@
 2.  In serverless.yml add 
       ```
       plugins:
-          - serverless-apigw-binary
+          - serverless-lambda-memory-checker
        ```
   
